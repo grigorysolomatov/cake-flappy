@@ -30,6 +30,14 @@ The site URL will be:
 https://<github-username>.github.io/cake-flappy/
 ```
 
+If you have a GitHub token with repo permissions, this helper can create/update the separate repository and enable Pages without storing the token:
+
+```bash
+export GITHUB_TOKEN=...
+export GH_OWNER=grigorysolomatov
+./scripts/publish-github-pages.sh
+```
+
 ## Files
 
 - `index.html` — page shell
