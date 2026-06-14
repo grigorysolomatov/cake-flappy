@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cake Flap — a tiny cake arcade game</title>
+  <meta name="description" content="A cozy Flappy Bird-inspired browser game about a determined slice of cake dodging kitchen hazards." />
+  <meta property="og:title" content="Cake Flap" />
+  <meta property="og:description" content="Flap a brave cake slice through forks, candles, sprinkles, and bakery chaos." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell" aria-label="Cake Flap game">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">tiny bakery arcade</p>
+        <h1>Cake Flap</h1>
+        <p class="tagline">Guide a brave slice of cake through a storm of forks, birthday candles, and suspiciously aerodynamic strawberries.</p>
+      </div>
+      <div class="controls-card" aria-label="Game controls">
+        <strong>Controls</strong>
+        <span>Space / ↑ / click / tap: flap</span>
+        <span>P: pause · R: restart · M: mute</span>
+      </div>
+    </section>
+
+    <section class="game-card">
+      <canvas id="game" width="960" height="540" aria-label="Cake Flap playable game canvas"></canvas>
+      <div class="hud" aria-live="polite">
+        <div><span>Score</span><strong id="score">0</strong></div>
+        <div><span>Best</span><strong id="best">0</strong></div>
+        <div><span>Sprinkles</span><strong id="sprinkles">0</strong></div>
+      </div>
+      <div id="overlay" class="overlay">
+        <div class="overlay-panel">
+          <p class="eyebrow">ready?</p>
+          <h2 id="overlay-title">Tap to flap</h2>
+          <p id="overlay-copy">Collect strawberries, skim the sprinkle trails, and avoid the cutlery. The cake believes in you.</p>
+          <button id="start-button" type="button">Start baking</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes">
+      <article>
+        <h2>What makes it cake?</h2>
+        <p>The player is a frosting-topped cake slice with candle sparks, the pipes are pastry forks and candles, and bonus strawberries create sprinkle bursts.</p>
+      </article>
+      <article>
+        <h2>No build step</h2>
+        <p>Pure HTML, CSS, and JavaScript. It is ready for GitHub Pages from the repository root.</p>
+      </article>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
