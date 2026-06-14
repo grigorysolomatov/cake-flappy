@@ -15,11 +15,21 @@
   const H = canvas.height;
   const groundY = H - 56;
   const cakeX = 205;
+  const storage = {
+    getBest() {
+      try { return Number(window.localStorage.getItem('cake-flap-best') || 0); }
+      catch (_) { return 0; }
+    },
+    setBest(value) {
+      try { window.localStorage.setItem('cake-flap-best', String(value)); }
+      catch (_) { /* Some mobile in-app browsers block localStorage. */ }
+    },
+  };
   const state = {
     mode: 'ready',
     t: 0,
     score: 0,
-    best: Number(localStorage.getItem('cake-flap-best') || 0),
+    best: storage.getBest(),
     sprinkles: 0,
     speed: 3.35,
     muted: false,
@@ -154,7 +164,7 @@
     state.shake = 14;
     if (state.score > state.best) {
       state.best = state.score;
-      localStorage.setItem('cake-flap-best', String(state.best));
+      storage.setBest(state.best);
     }
     for (let i = 0; i < 42; i++) {
       addParticle(cake.x + rand(-18, 18), cake.y + rand(-18, 18), rand(-5, 4), rand(-5, 3), rand(4, 11), pick(['#ff9fc7', '#fff0ce', '#5a2e22', '#ff4f77']), rand(40, 75));
@@ -546,8 +556,20 @@
     requestAnimationFrame(frame);
   }
 
+  let lastPrimaryActionAt = 0;
+
   function onPrimaryAction(ev) {
-    if (ev) ev.preventDefault();
+    if (ev) {
+      if (ev.cancelable !== false) ev.preventDefault();
+      if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
+    }
+
+    // Mobile browsers often dispatch touch, pointer, mouse, and click for one tap.
+    // Debounce so one finger tap means exactly one flap.
+    const now = Date.now();
+    if (now - lastPrimaryActionAt < 120) return;
+    lastPrimaryActionAt = now;
+
     if (state.mode === 'paused') pauseToggle(); else flap();
   }
 
@@ -557,10 +579,19 @@
     if (ev.key === 'r' || ev.key === 'R') resetGame();
     if (ev.key === 'm' || ev.key === 'M') state.muted = !state.muted;
   });
-  canvas.addEventListener('pointerdown', onPrimaryAction);
-  startButton.addEventListener('click', onPrimaryAction);
+
+  // Robust mobile input: Telegram/iOS/Android webviews differ on which events
+  // they emit. Listen to all common tap paths on both the canvas and overlay.
+  const tapTargets = [canvas, overlay, startButton];
+  for (const target of tapTargets) {
+    target.addEventListener('pointerdown', onPrimaryAction, { passive: false });
+    target.addEventListener('touchstart', onPrimaryAction, { passive: false });
+    target.addEventListener('mousedown', onPrimaryAction);
+    target.addEventListener('click', onPrimaryAction);
+  }
+  document.querySelector('.game-card').addEventListener('touchmove', ev => ev.preventDefault(), { passive: false });
 
   makeClouds();
-  showOverlay('Tap to flap', 'Collect strawberries, skim the sprinkle trails, and avoid the cutlery. The cake believes in you.', 'Start baking');
+  showOverlay('Tap anywhere', 'On phones, tap anywhere on the game area to flap. Collect strawberries and dodge the cutlery.', 'Start baking');
   frame();
 })();

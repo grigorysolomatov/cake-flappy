@@ -112,8 +112,12 @@ canvas {
   width: 100%;
   aspect-ratio: 16 / 9;
   display: block;
-  touch-action: manipulation;
+  touch-action: none;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hud {
@@ -158,8 +162,11 @@ canvas {
   padding: 18px;
   background: linear-gradient(180deg, rgba(18,11,22,0.18), rgba(18,11,22,0.62));
   transition: opacity 180ms ease, visibility 180ms ease;
+  touch-action: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.overlay.hidden { opacity: 0; visibility: hidden; }
+.overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .overlay-panel {
   width: min(470px, 100%);
@@ -212,12 +219,30 @@ button:active { transform: translateY(1px); }
 .notes p { margin-bottom: 0; color: rgba(255,240,206,0.68); line-height: 1.55; }
 
 @media (max-width: 760px) {
-  .shell { width: min(100% - 20px, 1120px); padding-top: 20px; }
-  .hero, .notes { grid-template-columns: 1fr; display: grid; }
-  .controls-card { min-width: 0; }
+  html, body { overscroll-behavior: none; }
+  .shell { width: 100%; padding: 10px 0 16px; }
+  .hero { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 0 12px; margin-bottom: 8px; }
+  h1 { font-size: clamp(2rem, 12vw, 3.1rem); margin-bottom: 4px; }
+  .tagline { display: none; }
+  .controls-card { display: none; }
+  .game-card {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  canvas {
+    height: min(72svh, 620px);
+    min-height: 360px;
+    max-height: calc(100svh - 112px);
+    aspect-ratio: auto;
+  }
   .hud { top: 10px; left: 10px; right: 10px; }
   .hud div { min-width: 0; flex: 1; padding: 8px 9px; }
+  .hud span { font-size: 0.62rem; }
   .hud strong { font-size: 1.05rem; }
-  .overlay-panel { padding: 22px; }
-  .game-card { border-radius: 20px; }
+  .overlay { padding: 12px; }
+  .overlay-panel { padding: 18px; border-radius: 22px; }
+  .overlay-panel h2 { font-size: clamp(1.65rem, 8vw, 2.3rem); }
+  .overlay-panel p:not(.eyebrow) { font-size: 0.95rem; }
+  .notes { grid-template-columns: 1fr; display: grid; padding: 0 12px; }
 }
